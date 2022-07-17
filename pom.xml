@@ -33,6 +33,15 @@
 			<version>2.7.0</version>
 		</dependency>
 
+		<!-- model mapper dependency for entity to Dto conversion or vice-versa -->
+		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
