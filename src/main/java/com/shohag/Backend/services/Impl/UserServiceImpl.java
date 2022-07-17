@@ -5,6 +5,7 @@ import com.shohag.Backend.entities.User;
 import com.shohag.Backend.exceptions.ResourceNotFoundException;
 import com.shohag.Backend.repositories.UserRepo;
 import com.shohag.Backend.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +15,11 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+    private final ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepo userRepo) {
+    public UserServiceImpl(UserRepo userRepo, ModelMapper modelMapper) {
         this.userRepo = userRepo;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -60,22 +63,32 @@ public class UserServiceImpl implements UserService {
 
     // we can convert dto->entity / entity->dto using modelMapper also
     private User dtoToUser(UserDto userDto) {
-        User user = new User();
-        user.setId(userDto.getId());
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setAbout(userDto.getAbout());
-        user.setPassword(userDto.getPassword());
+        /**
+            User user = new User();
+            user.setId(userDto.getId());
+            user.setName(userDto.getName());
+            user.setEmail(userDto.getEmail());
+            user.setAbout(userDto.getAbout());
+            user.setPassword(userDto.getPassword());
+            return user;
+        */
+
+        User user = this.modelMapper.map(userDto, User.class);
         return user;
     }
 
     private UserDto userToDto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setEmail(user.getEmail());
-        userDto.setAbout(user.getAbout());
-        userDto.setPassword(user.getPassword());
+        /**
+            UserDto userDto = new UserDto();
+            userDto.setId(user.getId());
+            userDto.setName(user.getName());
+            userDto.setEmail(user.getEmail());
+            userDto.setAbout(user.getAbout());
+            userDto.setPassword(user.getPassword());
+            return userDto;
+        */
+
+        UserDto userDto = this.modelMapper.map(user, UserDto.class);
         return userDto;
     }
 }
