@@ -3,6 +3,7 @@ package com.shohag.Backend.controllers;
 import com.shohag.Backend.dtos.PostDto;
 import com.shohag.Backend.dtos.UserDto;
 import com.shohag.Backend.payloads.ApiResponse;
+import com.shohag.Backend.payloads.PostResponse;
 import com.shohag.Backend.services.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +41,14 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostDto>> getPosts() {
-        List<PostDto> posts = this.postService.getPosts();
-        return new ResponseEntity<List<PostDto>>(posts, HttpStatus.OK);
+    public ResponseEntity<PostResponse> getPosts(@RequestParam(value = "pageNo", defaultValue = "0", required = false) Integer pageNo,
+                                                 @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize) {
+
+//        List<PostDto> posts = this.postService.getPosts(pageNo, pageSize);
+//        return new ResponseEntity<List<PostDto>>(posts, HttpStatus.OK);
+
+        PostResponse postResponse = this.postService.getPosts(pageNo, pageSize);
+        return new ResponseEntity<PostResponse>(postResponse, HttpStatus.OK);
     }
 
     @GetMapping("/post/{postId}")
