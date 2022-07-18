@@ -5,11 +5,15 @@ import com.shohag.Backend.entities.Category;
 import com.shohag.Backend.entities.Post;
 import com.shohag.Backend.entities.User;
 import com.shohag.Backend.exceptions.ResourceNotFoundException;
+import com.shohag.Backend.payloads.PostResponse;
 import com.shohag.Backend.repositories.CategoryRepo;
 import com.shohag.Backend.repositories.PostRepo;
 import com.shohag.Backend.repositories.UserRepo;
 import com.shohag.Backend.services.PostService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -66,10 +70,29 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getPosts() {
-        List<Post> posts = this.postRepo.findAll();
+    public PostResponse getPosts(Integer pageNo, Integer pageSize) {
+
+        // for getting all posts from DB
+        // List<Post> posts = this.postRepo.findAll();
+
+        // for pagination
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Post> pagedPosts = this.postRepo.findAll(pageable);
+        List<Post> posts = pagedPosts.getContent();
+
         List<PostDto> postDtos = posts.stream().map(post -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
-        return postDtos;
+
+        PostResponse postResponse = new PostResponse();
+
+        postResponse.setContent(postDtos);
+        postResponse.setPageNo(pagedPosts.getNumber());
+        postResponse.setPageSize(pagedPosts.getSize());
+        postResponse.setTotalElements(pagedPosts.getTotalElements());
+        postResponse.setTotalPages(pagedPosts.getTotalPages());
+        postResponse.setLastPage(pagedPosts.isLast());
+
+        return postResponse;
     }
 
     @Override
