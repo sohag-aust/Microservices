@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -70,14 +71,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse getPosts(Integer pageNo, Integer pageSize) {
+    public PostResponse getPosts(Integer pageNo, Integer pageSize, String sortBy, String sortOrder) {
 
         // for getting all posts from DB
         // List<Post> posts = this.postRepo.findAll();
 
         // for pagination
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        if(sortOrder.equalsIgnoreCase("desc")) {
+            pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        }
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<Post> pagedPosts = this.postRepo.findAll(pageable);
         List<Post> posts = pagedPosts.getContent();
 
