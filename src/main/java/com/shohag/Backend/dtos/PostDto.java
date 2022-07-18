@@ -8,6 +8,8 @@ import java.util.Date;
 @Data
 public class PostDto {
 
+    @JsonProperty("id")
+    private Long postId;
     private String title;
     private String content;
 
