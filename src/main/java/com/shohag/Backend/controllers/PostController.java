@@ -6,13 +6,22 @@ import com.shohag.Backend.dtos.PostDto;
 import com.shohag.Backend.dtos.UserDto;
 import com.shohag.Backend.payloads.ApiResponse;
 import com.shohag.Backend.payloads.PostResponse;
+import com.shohag.Backend.services.FileService;
 import com.shohag.Backend.services.PostService;
 import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -21,8 +30,14 @@ public class PostController {
 
     private final PostService postService;
 
-    public PostController(PostService postService) {
+    private final FileService fileService;
+
+    @Value("${project.image}")
+    private String path;
+
+    public PostController(PostService postService, FileService fileService) {
         this.postService = postService;
+        this.fileService = fileService;
     }
 
     @PostMapping("/user/{userId}/category/{categoryId}/posts")
@@ -85,5 +100,23 @@ public class PostController {
     public ResponseEntity<List<PostDto>> searchPosts(@PathVariable String keywords) {
         List<PostDto> posts = this.postService.searchPosts(keywords);
         return new ResponseEntity<List<PostDto>>(posts, HttpStatus.OK);
+    }
+
+    @PostMapping("/post/image/upload/{postId}")
+    public ResponseEntity<PostDto> uploadPostImage(@RequestParam(value = "image") MultipartFile image, @PathVariable Long postId) throws IOException {
+        PostDto postDto = this.postService.getPostById(postId);
+
+        String imageName = this.fileService.uploadImage(path, image);
+        postDto.setImageName(imageName);
+
+        PostDto updatedPost = this.postService.updatePost(postDto, postId);
+        return new ResponseEntity<PostDto>(updatedPost, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/post/image/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public void downloadImage(@PathVariable String imageName, HttpServletResponse response) throws IOException {
+        InputStream resource = this.fileService.getResource(path, imageName);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource, response.getOutputStream());
     }
 }
