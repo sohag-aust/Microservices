@@ -1,5 +1,7 @@
 package com.shohag.Backend.controllers;
 
+import com.shohag.Backend.constants.AppConstants;
+import com.shohag.Backend.constants.Paging;
 import com.shohag.Backend.dtos.PostDto;
 import com.shohag.Backend.dtos.UserDto;
 import com.shohag.Backend.payloads.ApiResponse;
@@ -42,13 +44,20 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<PostResponse> getPosts(@RequestParam(value = "pageNo", defaultValue = "0", required = false) Integer pageNo,
-                                                 @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
-                                                 @RequestParam(value = "sortBy", defaultValue = "postId", required = false) String sortBy,
-                                                 @RequestParam(value = "sortOrder", defaultValue = "asc", required = false) String sortOrder) {
+    public ResponseEntity<PostResponse> getPosts(@RequestParam(value = "pageNo", defaultValue = AppConstants.PAGE_NO, required = false) Integer pageNo,
+                                                 @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+                                                 @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
+                                                 @RequestParam(value = "sortOrder", defaultValue = AppConstants.SORT_ORDER, required = false) String sortOrder) {
 
 //        List<PostDto> posts = this.postService.getPosts(pageNo, pageSize);
 //        return new ResponseEntity<List<PostDto>>(posts, HttpStatus.OK);
+
+        // getting enum string value
+        String defaultPageNo = Paging.DEFAULT_PAGE_NO.getValue();
+        String defaultPageSize = Paging.DEFAULT_PAGE_SIZE.getValue();
+
+        System.out.println("== Page No: " + defaultPageNo);
+        System.out.println("== Page Size: " + defaultPageSize);
 
         PostResponse postResponse = this.postService.getPosts(pageNo, pageSize, sortBy, sortOrder);
         return new ResponseEntity<PostResponse>(postResponse, HttpStatus.OK);
