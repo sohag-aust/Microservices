@@ -5,6 +5,7 @@ import com.shohag.Backend.dtos.UserDto;
 import com.shohag.Backend.payloads.ApiResponse;
 import com.shohag.Backend.payloads.PostResponse;
 import com.shohag.Backend.services.PostService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,5 +70,11 @@ public class PostController {
     public ResponseEntity<ApiResponse> deletePost(@PathVariable Long postId) {
         this.postService.deletePost(postId);
         return new ResponseEntity<ApiResponse>(new ApiResponse("Post Deleted Successfully", true), HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/search/{keywords}")
+    public ResponseEntity<List<PostDto>> searchPosts(@PathVariable String keywords) {
+        List<PostDto> posts = this.postService.searchPosts(keywords);
+        return new ResponseEntity<List<PostDto>>(posts, HttpStatus.OK);
     }
 }
