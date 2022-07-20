@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "post")
+//@ToString(exclude = "post")
 public class Post {
 
     @Id
