@@ -13,6 +13,7 @@ public interface PostRepo extends JpaRepository<Post, Long> {
 
     // creating custom finder method in JPA
     List<Post> findByUser(User user);
+    Post findByPostId(Long postId);
     List<Post> findByCategory(Category category);
     List<Post> findByTitleContaining(String title); // here, containing will generate a LIKE type query under the hood
 }

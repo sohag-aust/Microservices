@@ -32,7 +32,7 @@ public class PostDto {
 
     private CategoryDto category;
     private UserDto user;
-//    private Set<CommentDto> comments = new HashSet<>();
+    private Set<CommentDto> comments = new HashSet<>();
 
     public static PostDto entityToDto(Post post) {
 //        System.out.println("== Post for converting to DTO : " + post.toString());
@@ -43,12 +43,11 @@ public class PostDto {
                 .setImageName(post.getImageName())
                 .setAddedDate(post.getAddedDate())
                 .setCategory(CategoryDto.entityToDto(post.getCategory()))
-                .setUser(UserDto.entityToDto(post.getUser()));
-
-//                .setComments(post.getComments()
-//                        .stream()
-//                        .map(CommentDto::entityToDto)
-//                        .collect(Collectors.toSet())
-//                );
+                .setUser(UserDto.entityToDto(post.getUser()))
+                .setComments(post.getComments()
+                        .stream()
+                        .map(CommentDto::entityToDto)
+                        .collect(Collectors.toSet())
+                );
     }
 }
