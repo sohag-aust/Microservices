@@ -80,6 +80,7 @@ public class PostController {
 
     @GetMapping("/post/{postId}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Long postId) {
+        System.out.println("==** Post Id: " + postId);
         PostDto post = this.postService.getPostById(postId);
         return new ResponseEntity<PostDto>(post, HttpStatus.OK);
     }

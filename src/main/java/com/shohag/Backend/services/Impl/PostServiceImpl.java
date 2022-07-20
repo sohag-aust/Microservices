@@ -101,8 +101,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto getPostById(Long postId) {
+        System.out.println("== Hello i am here ==");
         Post post = this.postRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "PostId", postId));
-        return this.modelMapper.map(post, PostDto.class);
+//        System.out.println("== Get Post by Id: " + post);
+        return PostDto.entityToDto(post);
     }
 
     @Override
