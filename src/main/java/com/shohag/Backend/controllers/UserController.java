@@ -1,15 +1,16 @@
 package com.shohag.Backend.controllers;
 
+import com.shohag.Backend.constants.AppConstants;
 import com.shohag.Backend.dtos.UserDto;
 import com.shohag.Backend.payloads.ApiResponse;
 import com.shohag.Backend.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -33,6 +34,8 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
+//    @PreAuthorize("hasAuthority('" + AppConstants.PRIVILEGE_ADMINISTRATOR + "')")
+    @PreAuthorize("hasRole('" + AppConstants.PRIVILEGE_ADMINISTRATOR + "')")
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userId) {
         this.userService.deleteUser(userId);

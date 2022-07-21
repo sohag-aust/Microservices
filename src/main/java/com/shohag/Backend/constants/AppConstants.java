@@ -7,4 +7,7 @@ public class AppConstants {
     public static final String SORT_ORDER = "asc";
     public static final Integer JWT_TOKEN_VALIDITY_TIME_IN_MS = 5 * 60 * 60;
     public static final String JWT_SECRET_KEY = "secret";
+
+    // PRIVILEGES
+    public static final String PRIVILEGE_ADMINISTRATOR = "ROLE_ADMIN";
 }
