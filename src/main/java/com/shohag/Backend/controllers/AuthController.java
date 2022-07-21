@@ -1,5 +1,6 @@
 package com.shohag.Backend.controllers;
 
+import com.shohag.Backend.exceptions.ApiException;
 import com.shohag.Backend.payloads.JWTAuthRequest;
 import com.shohag.Backend.payloads.JWTAuthResponse;
 import com.shohag.Backend.security.JWTTokenHelper;
@@ -48,6 +49,7 @@ public class AuthController {
             this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         } catch (BadCredentialsException badCredentialsException) {
             System.out.println("==** Invalid Details **==");
+            throw new ApiException("Invalid username or password");
         } catch (DisabledException disabledException) {
             System.out.println("==** User is Disable **==");
         }
