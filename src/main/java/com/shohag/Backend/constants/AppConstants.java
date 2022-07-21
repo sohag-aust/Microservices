@@ -10,4 +10,5 @@ public class AppConstants {
 
     // PRIVILEGES
     public static final String PRIVILEGE_ADMINISTRATOR = "ROLE_ADMIN";
+    public static final String PRIVILEGE_NORMAL_USER = "ROLE_NORMAL";
 }
