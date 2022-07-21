@@ -1,14 +1,21 @@
 package com.shohag.Backend.services.Impl;
 
+import com.shohag.Backend.constants.AppConstants;
 import com.shohag.Backend.dtos.UserDto;
+import com.shohag.Backend.entities.Role;
 import com.shohag.Backend.entities.User;
 import com.shohag.Backend.exceptions.ResourceNotFoundException;
+import com.shohag.Backend.repositories.RoleRepo;
 import com.shohag.Backend.repositories.UserRepo;
 import com.shohag.Backend.services.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,10 +23,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepo roleRepo;
 
-    public UserServiceImpl(UserRepo userRepo, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepo userRepo, ModelMapper modelMapper, PasswordEncoder passwordEncoder, RoleRepo roleRepo) {
         this.userRepo = userRepo;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepo = roleRepo;
     }
 
     @Override
@@ -59,6 +70,23 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long userId) {
         User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
         this.userRepo.delete(user);
+    }
+
+    @Override
+    public UserDto register(UserDto userDto) {
+        User user = this.modelMapper.map(userDto, User.class);
+
+        // encode password and set it
+        user.setPassword(this.passwordEncoder.encode(userDto.getPassword()));
+
+        // role
+        Role role = this.roleRepo.findByRoleName(AppConstants.PRIVILEGE_NORMAL_USER).orElseThrow(() -> new ResourceNotFoundException("Role", "RoleName: " + AppConstants.PRIVILEGE_NORMAL_USER));
+        user.getRoles().add(role);
+
+        user.setRoles(user.getRoles());
+        User registeredUser = this.userRepo.save(user);
+
+        return UserDto.entityToDto(registeredUser);
     }
 
     // we can convert dto->entity / entity->dto using modelMapper also

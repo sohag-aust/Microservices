@@ -1,9 +1,11 @@
 package com.shohag.Backend.controllers;
 
+import com.shohag.Backend.dtos.UserDto;
 import com.shohag.Backend.exceptions.ApiException;
 import com.shohag.Backend.payloads.JWTAuthRequest;
 import com.shohag.Backend.payloads.JWTAuthResponse;
 import com.shohag.Backend.security.JWTTokenHelper;
+import com.shohag.Backend.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,11 +26,13 @@ public class AuthController {
     private final JWTTokenHelper jwtTokenHelper;
     private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
-    public AuthController(JWTTokenHelper jwtTokenHelper, UserDetailsService userDetailsService, AuthenticationManager authenticationManager) {
+    public AuthController(JWTTokenHelper jwtTokenHelper, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, UserService userService) {
         this.jwtTokenHelper = jwtTokenHelper;
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -53,5 +57,11 @@ public class AuthController {
         } catch (DisabledException disabledException) {
             System.out.println("==** User is Disable **==");
         }
+    }
+
+    @PostMapping("/register")
+    private ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
+        UserDto registeredUser = this.userService.register(userDto);
+        return new ResponseEntity<UserDto>(registeredUser, HttpStatus.CREATED);
     }
 }
