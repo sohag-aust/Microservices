@@ -49,4 +49,18 @@ public class UserController {
         UserDto user = this.userService.getUserById(userId);
         return ResponseEntity.ok(user);
     }
+
+    @PostMapping("/saveFakeUser")
+    public ResponseEntity<UserDto> createFakeUser(@RequestBody UserDto userDto) { // @Valid annotation enables hibernate validators
+        System.out.println("==** Inside Fake-User Controller **==");
+        UserDto createdUserDto = this.userService.createUser(userDto);
+        return new ResponseEntity<UserDto>(createdUserDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/updateFakeUser/{userId}")
+    public ResponseEntity<UserDto> updateFakeUser(@RequestBody UserDto userDto, @PathVariable Long userId) {
+        System.out.println("==** Wana Update User **==");
+        UserDto updatedUser = this.userService.updateUser(userDto, userId);
+        return ResponseEntity.ok(updatedUser);
+    }
 }
