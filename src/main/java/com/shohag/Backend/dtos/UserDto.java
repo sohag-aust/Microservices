@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class UserDto {
     private Long id;
 
-    @JsonProperty("user_name")
+    @JsonProperty("name")
     @NotEmpty
     @Size(min = 4, message = "Username must be min of 4 characters")
     private String name;
