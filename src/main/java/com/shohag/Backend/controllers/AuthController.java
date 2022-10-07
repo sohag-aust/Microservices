@@ -1,11 +1,13 @@
 package com.shohag.Backend.controllers;
 
 import com.shohag.Backend.dtos.UserDto;
+import com.shohag.Backend.entities.User;
 import com.shohag.Backend.exceptions.ApiException;
 import com.shohag.Backend.payloads.JWTAuthRequest;
 import com.shohag.Backend.payloads.JWTAuthResponse;
 import com.shohag.Backend.security.JWTTokenHelper;
 import com.shohag.Backend.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,11 +29,14 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
-    public AuthController(JWTTokenHelper jwtTokenHelper, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, UserService userService) {
+    private final ModelMapper modelMapper;
+
+    public AuthController(JWTTokenHelper jwtTokenHelper, UserDetailsService userDetailsService, AuthenticationManager authenticationManager, UserService userService, ModelMapper modelMapper) {
         this.jwtTokenHelper = jwtTokenHelper;
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/login")
@@ -41,7 +46,9 @@ public class AuthController {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(jwtAuthRequest.getUsername());
         String jwtToken = this.jwtTokenHelper.generateToken(userDetails);
 
-        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse(jwtToken);
+        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
+        jwtAuthResponse.setJwt(jwtToken);
+        jwtAuthResponse.setUser(this.modelMapper.map((User)userDetails, UserDto.class));
         return new ResponseEntity<JWTAuthResponse>(jwtAuthResponse, HttpStatus.OK);
     }
 

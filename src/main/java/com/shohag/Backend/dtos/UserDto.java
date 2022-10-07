@@ -41,6 +41,12 @@ public class UserDto {
 
     private Set<RoleDto> roles = new HashSet<>();
 
+    // ignoring password to be returned as userDTO response
+    @JsonIgnore
+    public String getPassword() {
+        return this.password;
+    }
+
     public static UserDto entityToDto(User user) {
         return new UserDto()
                 .setId(user.getId())
