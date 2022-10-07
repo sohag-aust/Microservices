@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -57,7 +59,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    private ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
+    private ResponseEntity<UserDto> register(@Valid @RequestBody UserDto userDto) { // @valid annotation enable validation in userDTO
         UserDto registeredUser = this.userService.register(userDto);
         return new ResponseEntity<UserDto>(registeredUser, HttpStatus.CREATED);
     }
