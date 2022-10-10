@@ -47,16 +47,23 @@ public class UserDto {
         return this.password;
     }
 
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public static UserDto entityToDto(User user) {
-        return new UserDto()
-                .setId(user.getId())
-                .setName(user.getName())
-                .setEmail(user.getEmail())
-                .setPassword(user.getPassword())
-                .setAbout(user.getAbout())
-                .setRoles(user.getRoles()
-                        .stream()
-                        .map(RoleDto::entityToDto)
-                        .collect(Collectors.toSet()));
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
+        userDto.setPassword(user.getPassword());
+        userDto.setAbout(user.getAbout());
+        userDto.setRoles(user.getRoles()
+                .stream()
+                .map(RoleDto::entityToDto)
+                .collect(Collectors.toSet()));
+
+        return userDto;
     }
 }
