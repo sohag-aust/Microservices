@@ -6,6 +6,7 @@ import com.shohag.Backend.security.JwtAuthenticationFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -47,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeHttpRequests()
         .antMatchers("/api/v1/auth/login").permitAll()
         .antMatchers("/api/v1/auth/register").permitAll()
-//        .antMatchers(HttpMethod.GET).permitAll() // if we want to hit get method without login
+        .antMatchers(HttpMethod.GET).permitAll() // if we want to hit get method without login
         .anyRequest()
         .authenticated()
         .and()
