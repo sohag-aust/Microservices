@@ -95,6 +95,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new CorsFilter(urlBasedCorsConfigurationSource));
+
+        // https://www.appsloveworld.com/springboot/100/80/axios-not-sending-authorization-header-reactjs
+        filterRegistrationBean.setOrder(-110); // this one will activate our corsFilter .. otherwise, default spring corsFilter will trigger when frontend hits API
         return filterRegistrationBean;
     }
 }
