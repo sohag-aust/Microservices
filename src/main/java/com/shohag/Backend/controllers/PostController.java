@@ -4,11 +4,13 @@ import com.shohag.Backend.constants.AppConstants;
 import com.shohag.Backend.constants.Paging;
 import com.shohag.Backend.dtos.PostDto;
 import com.shohag.Backend.dtos.UserDto;
+import com.shohag.Backend.entities.Student;
 import com.shohag.Backend.payloads.ApiResponse;
 import com.shohag.Backend.payloads.PostResponse;
 import com.shohag.Backend.services.FileService;
 import com.shohag.Backend.services.PostService;
 import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,12 +34,18 @@ public class PostController {
 
     private final FileService fileService;
 
+    private final Student student;
+
+    private final Student student2;
+
     @Value("${project.image}")
     private String path;
 
-    public PostController(PostService postService, FileService fileService) {
+    public PostController(PostService postService, FileService fileService, Student student, @Qualifier("student1")Student student2) {
         this.postService = postService;
         this.fileService = fileService;
+        this.student = student;
+        this.student2 = student2;
     }
 
     @PostMapping("/user/{userId}/category/{categoryId}/posts")
@@ -66,6 +74,9 @@ public class PostController {
 
 //        List<PostDto> posts = this.postService.getPosts(pageNo, pageSize);
 //        return new ResponseEntity<List<PostDto>>(posts, HttpStatus.OK);
+
+        System.out.println("==** Getting student Object by @Primary : " + student.toString());
+        System.out.println("==** Getting student Object by @Qualifier : " + student2.toString());
 
         // getting enum string value
         String defaultPageNo = Paging.DEFAULT_PAGE_NO.getValue();
